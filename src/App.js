@@ -5,22 +5,22 @@ import Person from './Person/Person';
 class App extends Component {
   state = {
     persons: [{name: 'Max', age: 28}, {name: 'Manu', age: 29}, {name: 'Steph', age: 25}],
-    otherState: 'other'
+    otherState: 'other',
+    showPersons: false
   };
 
   clickHandler = () => {
     this.setState({
-      persons: [{name: 'Max', age: 28}, {name: 'Manuaa', age: 29}, {name: 'Steph', age: 26}],
-      showPersons: false
+      persons: [{name: 'Max', age: 28}, {name: 'Manuaa', age: 29}, {name: 'Steph', age: 26}]
     });
   };
 
   changeHandler = event => {
     this.setState({
       persons: [
-        {name: event.target.value, age: 28},
-        {name: 'Manuaa', age: 29},
-        {name: 'Steph', age: 26}
+        {id: 1, name: event.target.value, age: 28},
+        {id: 2, name: 'Manuaa', age: 29},
+        {id: 3, name: 'Steph', age: 26}
       ]
     });
   };
@@ -38,19 +38,17 @@ class App extends Component {
     if (this.state.showPersons) {
       persons = (
         <div>
-          <Person
-            name={this.state.persons[0].name}
-            age={this.state.persons[0].age}
-            click={this.clickHandler}
-            change={this.changeHandler}
-          />
-          <Person
-            name={this.state.persons[1].name}
-            age={this.state.persons[1].age}
-            click={this.clickHandler}>
-            My hobby is racing
-          </Person>
-          <Person name={this.state.persons[2].name} age={this.state.persons[2].age} />
+          {this.state.persons.map(person => {
+            return (
+              <Person
+                key={person.id}
+                name={person.name}
+                age={person.age}
+                click={this.clickHandler}
+                change={this.changeHandler}
+              />
+            );
+          })}
         </div>
       );
     }
