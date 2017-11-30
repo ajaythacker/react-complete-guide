@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import './App.css';
 import Person from './Person/Person';
+import ValidationComponent from './ValidationComponent';
+import CharComponent from './CharComponent';
 
 class App extends Component {
   state = {
@@ -10,7 +12,9 @@ class App extends Component {
       {id: 3, name: 'Steph', age: 25}
     ],
     otherState: 'other',
-    showPersons: false
+    showPersons: false,
+    textLength: 0,
+    enteredText: ''
   };
 
   deletePersonHandler = id => {
@@ -44,6 +48,18 @@ class App extends Component {
     });
   };
 
+  countLetters = event => {
+    console.log(event.target.value.length);
+    this.setState({textLength: event.target.value.length, enteredText: event.target.value});
+  };
+
+  deleteClickedLetter = (event, id) => {
+    const text = this.state.enteredText.split('');
+    text.splice(id, 1);
+    const updatedText = text.join('');
+    this.setState({enteredText: updatedText, textLength: updatedText.length});
+  };
+
   render() {
     let persons = null;
     if (this.state.showPersons) {
@@ -64,11 +80,33 @@ class App extends Component {
       );
     }
 
+    const charArray = this.state.enteredText.split('');
+    let charComponents = (
+      <div>
+        {charArray.map((letter, index) => {
+          return (
+            <CharComponent
+              delete={event => this.deleteClickedLetter(event, index)}
+              key={index}
+              letter={letter}
+            />
+          );
+        })}
+      </div>
+    );
+
     return (
       <div className="App">
         <button onClick={this.clickHandler}>Switch Name</button>
         <button onClick={this.showHidePersons}>Show/Hide</button>
         {persons}
+        <div>
+          Enter any text
+          <input type="text" onChange={this.countLetters} value={this.state.enteredText} />
+          <ValidationComponent textLength={this.state.textLength} />
+        </div>
+
+        <div>{charComponents}</div>
       </div>
     );
   }
